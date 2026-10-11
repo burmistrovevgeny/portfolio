@@ -8,16 +8,16 @@
     :root {
       --card: #1a1a22;
       --accent: #ff5e71;
+      --accent-2: #7c5cff;
       --text: #ffffff;
       --muted: #a0a0b0;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      /* ФОН: положи картинку bg.jpg в папку img рядом с index.html */
       background: linear-gradient(rgba(15,15,19,0.85), rgba(15,15,19,0.85)), url('img/bg.jpg');
       background-size: cover;
       background-position: center;
-      background-attachment: fixed; /* фон не прокручивается — выглядит эффектно */
+      background-attachment: fixed;
       color: var(--text);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       line-height: 1.5;
@@ -37,6 +37,19 @@
     .logo {
       font-weight: 700; letter-spacing: 1px;
       text-transform: uppercase;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    /* Мигающий маркер у логотипа */
+    .logo::before {
+      content: '';
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulseDot 2s ease-in-out infinite;
+    }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(255,94,113,0.5); }
+      50%      { opacity: 0.7; transform: scale(1.15); box-shadow: 0 0 0 7px rgba(255,94,113,0); }
     }
     nav button {
       background: none;
@@ -45,14 +58,11 @@
       cursor: pointer;
       padding: 0.5rem 1rem;
       font-size: 0.95rem;
+      position: relative;
       transition: color 0.3s ease;
     }
-    nav button.active, nav button:hover {
-      color: var(--text);
-    }
-    nav button.active {
-      border-bottom: 2px solid var(--accent);
-    }
+    nav button.active, nav button:hover { color: var(--text); }
+    nav button.active { border-bottom: 2px solid var(--accent); text-shadow: 0 0 14px rgba(255,94,113,0.6); }
     main {
       padding-top: 90px;
       max-width: 1400px;
@@ -60,19 +70,35 @@
       padding-left: 2rem;
       padding-right: 2rem;
     }
-    section {
-      display: none;
-      animation: fadeIn 0.6s ease;
-    }
+    section { display: none; animation: fadeIn 0.6s ease; }
     section.active { display: block; }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      to   { opacity: 1; transform: translateY(0); }
     }
     h2 {
       font-size: 2.2rem;
-      margin-bottom: 2rem;
+      margin-bottom: 0.6rem;
       letter-spacing: -0.02em;
+    }
+    /* Подзаголовок-лид под h2 */
+    .lead {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+      max-width: 640px;
+    }
+    /* Градиентный «живой» текст для акцентов */
+    .gradient-text {
+      background: linear-gradient(90deg, #ff5e71, #7c5cff, #ff5e71);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 6s linear infinite;
+    }
+    @keyframes gradientShift {
+      to { background-position: 200% center; }
     }
     .grid {
       display: grid;
@@ -88,6 +114,19 @@
       cursor: pointer;
       transition: transform 0.4s cubic-bezier(0.25,1,0.5,1),
                   box-shadow 0.4s ease;
+      /* каскадное появление */
+      opacity: 0;
+      animation: cardIn 0.6s ease forwards;
+    }
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.15s; }
+    .card:nth-child(3) { animation-delay: 0.25s; }
+    .card:nth-child(4) { animation-delay: 0.35s; }
+    .card:nth-child(5) { animation-delay: 0.45s; }
+    .card:nth-child(6) { animation-delay: 0.55s; }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(24px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
     .card:hover {
       transform: scale(1.03);
@@ -97,7 +136,9 @@
       width: 100%; height: 100%;
       object-fit: cover;
       display: block;
+      transition: transform 0.5s ease;
     }
+    .card:hover img { transform: scale(1.06); }
     .overlay {
       position: absolute;
       inset: 0;
@@ -112,13 +153,23 @@
       text-align: center;
     }
     .card:hover .overlay { opacity: 1; }
-    .overlay h3 {
-      font-size: 1.3rem;
-      margin-bottom: 0.3rem;
-    }
-    .overlay p { font-size: 0.85rem; color: var(--muted); }
+    .overlay h3 { font-size: 1.3rem; margin-bottom: 0.3rem; }
+    .overlay p  { font-size: 0.85rem; color: var(--muted); }
 
-    .text-block { max-width: 680px; }
+    .text-block { max-width: 680px; font-size: 1.05rem; }
+    .text-block p + p { margin-top: 1rem; }
+    .skills {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      margin-top: 1.5rem;
+    }
+    .skill-chip {
+      background: rgba(124,92,255,0.12);
+      border: 1px solid rgba(124,92,255,0.35);
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: #cfc6ff;
+    }
     .contact-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -132,6 +183,13 @@
       display: flex;
       align-items: center;
       gap: 0.8rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      border: 1px solid transparent;
+    }
+    .contact-item:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,94,113,0.4);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.35);
     }
     button.cta {
       margin-top: 1.5rem;
@@ -143,36 +201,43 @@
       font-weight: 600;
       cursor: pointer;
       transition: background 0.3s ease, transform 0.2s ease;
+      /* Пульсация свечением */
+      animation: ctaPulse 2.6s ease-in-out infinite;
     }
-    button.cta:hover { background: #e53e52; transform: scale(1.02); }
+    @keyframes ctaPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,94,113,0.45); }
+      50%      { box-shadow: 0 0 0 14px rgba(255,94,113,0); }
+    }
+    button.cta:hover { background: #e53e52; transform: scale(1.03); animation: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
 
     @media (max-width: 768px) {
-  header {
-    padding: 0.8rem 1rem;
-    flex-direction: column;
-    gap: 0.6rem;
-  }
-  .logo { font-size: 1rem; }
-  nav {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0 0.4rem;
-  }
-  nav button {
-    padding: 0.4rem 0.6rem;
-    font-size: 0.9rem;
-  }
-  /* Главный фикс: отступ под выросшую шапку */
-  main {
-    padding-top: 190px;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  h2 { font-size: 1.6rem; margin-bottom: 1.2rem; }
-  .contact-grid { grid-template-columns: 1fr; }
-  body { background-attachment: scroll; }
-  }
+      header {
+        padding: 0.8rem 1rem;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+      .logo { font-size: 1rem; }
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0 0.4rem;
+      }
+      nav button { padding: 0.4rem 0.6rem; font-size: 0.9rem; }
+      main {
+        padding-top: 190px;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      h2 { font-size: 1.6rem; margin-bottom: 0.4rem; }
+      .lead { font-size: 0.95rem; margin-bottom: 1.4rem; }
+      .contact-grid { grid-template-columns: 1fr; }
+      body { background-attachment: scroll; }
+    }
   </style>
 </head>
 <body>
@@ -190,28 +255,28 @@
   <main>
     <!-- Превью -->
     <section id="previews" class="active">
-      <h2>Превью для роликов</h2>
+      <h2>Превью, которые <span class="gradient-text">кликают</span></h2>
+      <p class="lead">Обложки, которые цепляют за секунды — и превращают прокрутку в просмотр.</p>
       <div class="grid">
-        <!-- ЗАМЕНИ img/preview-1.jpg на имя своего файла в папке img -->
         <div class="card" onclick="openProject('previews-1')">
           <img src="img/preview-1.jpg" alt="Превью 1" />
           <div class="overlay">
             <h3>Превью к ролику</h3>
-            <p>Задача: привлечь внимание за 3 сек</p>
+            <p>Задача: остановить палец за 3 секунды</p>
           </div>
         </div>
         <div class="card" onclick="openProject('previews-2')">
           <img src="img/preview-2.jpg" alt="Превью 2" />
           <div class="overlay">
             <h3>Превью к стриму</h3>
-            <p>Акцент на эмоцию и динамику</p>
+            <p>Эмоция героя как главный акцент</p>
           </div>
         </div>
         <div class="card" onclick="openProject('previews-3')">
           <img src="img/preview-3.jpg" alt="Превью 3" />
           <div class="overlay">
-            <h3>Превью YT Shorts</h3>
-            <p>Минимализм + читаемый текст</p>
+            <h3>Превью Shorts</h3>
+            <p>Минимализм и читаемость на любом экране</p>
           </div>
         </div>
       </div>
@@ -219,20 +284,21 @@
 
     <!-- Аватарки -->
     <section id="avatars">
-      <h2>Аватарки и иконки</h2>
+      <h2>Аватарки, которые <span class="gradient-text">запоминаются</span></h2>
+      <p class="lead">Иконки и аватары, читаемые даже в миниатюре списка каналов.</p>
       <div class="grid">
         <div class="card">
           <img src="img/avatar-1.jpg" alt="Аватарка 1" />
           <div class="overlay">
             <h3>Аватар для Twitch</h3>
-            <p>Яркий стиль, читаемость на миниатюре</p>
+            <p>Яркий стиль, узнаваемый в ленте</p>
           </div>
         </div>
         <div class="card">
           <img src="img/avatar-2.jpg" alt="Аватарка 2" />
           <div class="overlay">
             <h3>Аватар для Discord</h3>
-            <p>Чистый силуэт, акцент на деталях</p>
+            <p>Чистый силуэт, детальность в малом</p>
           </div>
         </div>
       </div>
@@ -240,7 +306,8 @@
 
     <!-- Видеомонтаж -->
     <section id="video">
-      <h2>Видеомонтаж и моушн</h2>
+      <h2>Монтаж, который <span class="gradient-text">не отпускает</span></h2>
+      <p class="lead">Ритм, звук и картинка — собраны так, чтобы досматривали до конца.</p>
       <div class="grid">
         <div class="card">
           <img src="img/video-1.jpg" alt="Ролик 1" />
@@ -253,7 +320,7 @@
           <img src="img/video-2.jpg" alt="Промо 1" />
           <div class="overlay">
             <h3>Промо-ролик</h3>
-            <p>Сценарный подход, озвучка, цветокор</p>
+            <p>Сценарий, озвучка, цветокор</p>
           </div>
         </div>
       </div>
@@ -261,50 +328,55 @@
 
     <!-- О себе -->
     <section id="about">
-      <h2>О себе</h2>
+      <h2>Дизайн и монтаж <span class="gradient-text">без воды</span></h2>
       <div class="text-block">
-        <p>Я занимаюсь графическим дизайном и видеомонтажом: делаю превью, которые цепляют взгляд, аватарки под любую платформу, монтирую ролики для соцсетей. Работаю быстро, чисто, без лишней воды — только результат.</p>
-        <br/>
-        <p>В работе использую: Photoshop, Illustrator, Premiere Pro, After Effects. Могу собрать короткий шоурил или оформить серию обложек под единый стиль.</p>
+        <p>Делаю превью, которые проходят тест «три секунды»: если обложка не цепляет взгляд — я её переделываю. Собираю аватарки под любые платформы и монтирую ролики с акцентом на ритм и удержание.</p>
+        <p>Каждый проект — от первой идеи до финального рендера. Сроки держу, правки не боюсь, воду не лью.</p>
       </div>
-      <button class="cta" onclick="document.getElementById('contacts-tab').click()">Связаться</button>
+      <div class="skills">
+        <span class="skill-chip">Photoshop</span>
+        <span class="skill-chip">Illustrator</span>
+        <span class="skill-chip">Premiere Pro</span>
+        <span class="skill-chip">After Effects</span>
+      </div>
+      <button class="cta" onclick="goToContacts()">Связаться</button>
     </section>
 
-    <!-- Контакты -->
+        <!-- Контакты -->
     <section id="contacts">
-      <h2>Контакты</h2>
+      <h2>Обсудим <span class="gradient-text">твой проект?</span></h2>
+      <p class="lead">Нажми на любой контакт — откроется почта, чат или профиль.</p>
       <div class="contact-grid">
-        <div class="contact-item">
+        <a class="contact-item" href="mailto:evgenyburmistrov@mail.ru">
           <span>✉️</span>
           <div>
             <strong>Email</strong><br/>
             evgenyburmistrov@mail.ru
           </div>
-        </div>
-        <div class="contact-item">
+        </a>
+        <a class="contact-item" href="https://t.me/evgenyburmistrov" target="_blank" rel="noopener">
           <span>📱</span>
           <div>
             <strong>Telegram</strong><br/>
             @evgenyburmistrov
           </div>
-        </div>
-        <div class="contact-item">
+        </a>
+        <a class="contact-item" href="https://profi.ru/profile/BurmistrovYA" target="_blank" rel="noopener">
           <span>💼</span>
           <div>
             <strong>Profi.ru</strong><br/>
-            https://profi.ru/profile/BurmistrovYA
+            Мой профиль на Profi.ru
           </div>
-        </div>
-        <div class="contact-item">
+        </a>
+        <a class="contact-item" href="tel:+7XXXXXXXXXX">
           <span>📞</span>
           <div>
             <strong>Телефон</strong><br/>
             +7 (XXX) XXX-XX-XX
           </div>
-        </div>
+        </a>
       </div>
     </section>
-  </main>
 
   <script>
     const buttons = document.querySelectorAll('.tab-btn');
@@ -317,8 +389,19 @@
         btn.classList.add('active');
         document.getElementById(btn.getAttribute('data-tab')).classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        // перезапуск каскадной анимации карточек при каждом открытии вкладки
+        document.querySelectorAll('#' + btn.getAttribute('data-tab') + ' .card').forEach(c => {
+          c.style.animation = 'none';
+          void c.offsetWidth; // сброс анимации
+          c.style.animation = '';
+        });
       });
     });
+
+    // Рабочий переход на вкладку контактов
+    function goToContacts() {
+      document.querySelector('.tab-btn[data-tab="contacts"]').click();
+    }
 
     function openProject(id) {
       alert('Здесь откроется детальный просмотр проекта.');
