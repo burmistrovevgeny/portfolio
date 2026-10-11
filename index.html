@@ -147,32 +147,18 @@
     button.cta:hover { background: #e53e52; transform: scale(1.02); }
 
     @media (max-width: 768px) {
-  header {
-    padding: 0.8rem 1rem;
-    flex-direction: column;
-    gap: 0.6rem;
-  }
-  .logo { font-size: 1rem; }
+  header { padding: 0.8rem 0.5rem; gap: 0.6rem; }
   nav {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0 0.4rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
   }
-  nav button {
-    padding: 0.4rem 0.6rem;
-    font-size: 0.9rem;
-  }
-  /* Главный фикс: отступ под выросшую шапку */
-  main {
-    padding-top: 190px;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  h2 { font-size: 1.6rem; margin-bottom: 1.2rem; }
-  .contact-grid { grid-template-columns: 1fr; }
-  body { background-attachment: scroll; }
-  }
+  nav button { flex: 0 0 auto; }
+  main { padding-top: 130px; }
+}
+
   </style>
 </head>
 <body>
