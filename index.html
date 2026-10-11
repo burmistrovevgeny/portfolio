@@ -213,8 +213,13 @@
     button.cta:hover { background: #e53e52; transform: scale(1.03); animation: none; }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation: none !important; transition: none !important; }
-    }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition: none !important;
+  }
+}
+
 
     @media (max-width: 768px) {
       header {
