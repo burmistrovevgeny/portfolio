@@ -6,7 +6,6 @@
   <title>Портфолио | Графический дизайн и монтаж</title>
   <style>
     :root {
-      --bg: #0f0f13;
       --card: #1a1a22;
       --accent: #ff5e71;
       --text: #ffffff;
@@ -14,7 +13,11 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: var(--bg);
+      /* ФОН: положи картинку bg.jpg в папку img рядом с index.html */
+      background: linear-gradient(rgba(15,15,19,0.85), rgba(15,15,19,0.85)), url('img/bg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed; /* фон не прокручивается — выглядит эффектно */
       color: var(--text);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       line-height: 1.5;
@@ -51,7 +54,7 @@
       border-bottom: 2px solid var(--accent);
     }
     main {
-      padding-top: 90px; /* отступ под фиксированный хедер */
+      padding-top: 90px;
       max-width: 1400px;
       margin: 0 auto;
       padding-left: 2rem;
@@ -115,7 +118,6 @@
     }
     .overlay p { font-size: 0.85rem; color: var(--muted); }
 
-    /* О себе / Контакты */
     .text-block { max-width: 680px; }
     .contact-grid {
       display: grid;
@@ -124,7 +126,7 @@
       margin-top: 2rem;
     }
     .contact-item {
-      background: var(--card);
+      background: rgba(26,26,34,0.85);
       padding: 1rem;
       border-radius: 12px;
       display: flex;
@@ -147,6 +149,7 @@
     @media (max-width: 768px) {
       header { padding: 1rem; flex-direction: column; gap: 1rem; }
       .contact-grid { grid-template-columns: 1fr; }
+      body { background-attachment: scroll; } /* на телефоне fixed фоны глючат */
     }
   </style>
 </head>
@@ -167,22 +170,23 @@
     <section id="previews" class="active">
       <h2>Превью для роликов</h2>
       <div class="grid">
+        <!-- ЗАМЕНИ img/preview-1.jpg на имя своего файла в папке img -->
         <div class="card" onclick="openProject('previews-1')">
-          <img src="https://via.placeholder.com/800x600/222/fff?text=Preview+1" alt="Превью 1" />
+          <img src="img/preview-1.jpg" alt="Превью 1" />
           <div class="overlay">
             <h3>Превью к ролику</h3>
             <p>Задача: привлечь внимание за 3 сек</p>
           </div>
         </div>
         <div class="card" onclick="openProject('previews-2')">
-          <img src="https://via.placeholder.com/800x600/222/fff?text=Preview+2" alt="Превью 2" />
+          <img src="img/preview-2.jpg" alt="Превью 2" />
           <div class="overlay">
             <h3>Превью к стриму</h3>
             <p>Акцент на эмоцию и динамику</p>
           </div>
         </div>
         <div class="card" onclick="openProject('previews-3')">
-          <img src="https://via.placeholder.com/800x600/222/fff?text=Preview+3" alt="Превью 3" />
+          <img src="img/preview-3.jpg" alt="Превью 3" />
           <div class="overlay">
             <h3>Превью YT Shorts</h3>
             <p>Минимализм + читаемый текст</p>
@@ -196,14 +200,14 @@
       <h2>Аватарки и иконки</h2>
       <div class="grid">
         <div class="card">
-          <img src="https://via.placeholder.com/600x600/333/fff?text=Avatar+1" alt="Аватарка 1" />
+          <img src="img/avatar-1.jpg" alt="Аватарка 1" />
           <div class="overlay">
             <h3>Аватар для Twitch</h3>
             <p>Яркий стиль, читаемость на миниатюре</p>
           </div>
         </div>
         <div class="card">
-          <img src="https://via.placeholder.com/600x600/333/fff?text=Avatar+2" alt="Аватарка 2" />
+          <img src="img/avatar-2.jpg" alt="Аватарка 2" />
           <div class="overlay">
             <h3>Аватар для Discord</h3>
             <p>Чистый силуэт, акцент на деталях</p>
@@ -217,14 +221,14 @@
       <h2>Видеомонтаж и моушн</h2>
       <div class="grid">
         <div class="card">
-          <img src="https://via.placeholder.com/800x450/111/fff?text=Reel+1" alt="Ролик 1" />
+          <img src="img/video-1.jpg" alt="Ролик 1" />
           <div class="overlay">
             <h3>Reel / TikTok</h3>
             <p>Динамика, быстрые склейки, субтитры</p>
           </div>
         </div>
         <div class="card">
-          <img src="https://via.placeholder.com/800x450/111/fff?text=Promo+1" alt="Промо 1" />
+          <img src="img/video-2.jpg" alt="Промо 1" />
           <div class="overlay">
             <h3>Промо-ролик</h3>
             <p>Сценарный подход, озвучка, цветокор</p>
@@ -241,7 +245,7 @@
         <br/>
         <p>В работе использую: Photoshop, Illustrator, Premiere Pro, After Effects. Могу собрать короткий шоурил или оформить серию обложек под единый стиль.</p>
       </div>
-      <button class="cta" onclick="document.getElementById('contacts').scrollIntoView({behavior:'smooth'})">Связаться</button>
+      <button class="cta" onclick="document.getElementById('contacts-tab').click()">Связаться</button>
     </section>
 
     <!-- Контакты -->
@@ -286,20 +290,16 @@
 
     buttons.forEach(btn => {
       btn.addEventListener('click', () => {
-        // убираем активный класс
         buttons.forEach(b => b.classList.remove('active'));
         sections.forEach(s => s.classList.remove('active'));
-
-        // добавляем активный класс нажатой кнопке и секции
         btn.classList.add('active');
-        const targetId = btn.getAttribute('data-tab');
-        document.getElementById(targetId).classList.add('active');
+        document.getElementById(btn.getAttribute('data-tab')).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     });
 
-    // Заглушка для открытия проекта (можно доработать под попап)
     function openProject(id) {
-      alert('Здесь откроется детальный просмотр проекта: описание, этапы, исходники (если нужно).');
+      alert('Здесь откроется детальный просмотр проекта.');
     }
   </script>
 </body>
