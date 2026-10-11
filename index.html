@@ -39,7 +39,6 @@
       text-transform: uppercase;
       display: flex; align-items: center; gap: 0.5rem;
     }
-    /* Мигающий маркер у логотипа */
     .logo::before {
       content: '';
       width: 9px; height: 9px;
@@ -153,6 +152,61 @@
     .overlay h3 { font-size: 1.3rem; margin-bottom: 0.3rem; }
     .overlay p  { font-size: 0.85rem; color: var(--muted); }
 
+    /* ===== Лайтбокс (картинки и видео) ===== */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(5,5,10,0.94);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .lightbox.open { display: flex; animation: fadeIn 0.3s ease; }
+    .lightbox img {
+      max-width: 92vw;
+      max-height: 88vh;
+      border-radius: 12px;
+      object-fit: contain;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.7);
+      animation: zoomIn 0.3s ease;
+      cursor: zoom-out;
+    }
+    .lightbox video {
+      max-width: 94vw;
+      max-height: 88vh;
+      border-radius: 12px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.7);
+      background: #000;
+      animation: zoomIn 0.3s ease;
+    }
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 1rem; right: 1.4rem;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      line-height: 1;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .lightbox-close:hover { background: var(--accent); transform: rotate(90deg); }
+    .lightbox-caption {
+      position: absolute;
+      bottom: 1.4rem; left: 0; right: 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
     .text-block { max-width: 680px; font-size: 1.05rem; }
     .text-block p + p { margin-top: 1rem; }
     .skills {
@@ -182,7 +236,6 @@
       gap: 0.8rem;
       transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
       border: 1px solid transparent;
-      /* Ссылки не должны быть синими и подчёркнутыми */
       color: var(--text);
       text-decoration: none;
     }
@@ -213,13 +266,12 @@
     button.cta:hover { background: #e53e52; transform: scale(1.03); animation: none; }
 
     @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition: none !important;
-  }
-}
-
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition: none !important;
+      }
+    }
 
     @media (max-width: 768px) {
       header {
@@ -244,6 +296,8 @@
       .lead { font-size: 0.95rem; margin-bottom: 1.4rem; }
       .contact-grid { grid-template-columns: 1fr; }
       body { background-attachment: scroll; }
+      .lightbox { padding: 0.5rem; }
+      .lightbox img, .lightbox video { max-width: 96vw; max-height: 80vh; }
     }
   </style>
 </head>
@@ -265,21 +319,21 @@
       <h2>Превью, которые <span class="gradient-text">кликают</span></h2>
       <p class="lead">Обложки, которые цепляют за секунды — и превращают прокрутку в просмотр.</p>
       <div class="grid">
-        <div class="card" onclick="openProject('previews-1')">
+        <div class="card" data-img="img/preview-1.jpg">
           <img src="img/preview-1.jpg" alt="Превью 1" />
           <div class="overlay">
             <h3>Превью к ролику</h3>
             <p>Задача: остановить палец за 3 секунды</p>
           </div>
         </div>
-        <div class="card" onclick="openProject('previews-2')">
+        <div class="card" data-img="img/preview-2.jpg">
           <img src="img/preview-2.jpg" alt="Превью 2" />
           <div class="overlay">
             <h3>Превью к стриму</h3>
             <p>Эмоция героя как главный акцент</p>
           </div>
         </div>
-        <div class="card" onclick="openProject('previews-3')">
+        <div class="card" data-img="img/preview-3.jpg">
           <img src="img/preview-3.jpg" alt="Превью 3" />
           <div class="overlay">
             <h3>Превью Shorts</h3>
@@ -294,14 +348,14 @@
       <h2>Аватарки, которые <span class="gradient-text">запоминаются</span></h2>
       <p class="lead">Иконки и аватары, читаемые даже в миниатюре списка каналов.</p>
       <div class="grid">
-        <div class="card">
+        <div class="card" data-img="img/avatar-1.jpg">
           <img src="img/avatar-1.jpg" alt="Аватарка 1" />
           <div class="overlay">
             <h3>Аватар для Twitch</h3>
             <p>Яркий стиль, узнаваемый в ленте</p>
           </div>
         </div>
-        <div class="card">
+        <div class="card" data-img="img/avatar-2.jpg">
           <img src="img/avatar-2.jpg" alt="Аватарка 2" />
           <div class="overlay">
             <h3>Аватар для Discord</h3>
@@ -316,14 +370,14 @@
       <h2>Монтаж, который <span class="gradient-text">не отпускает</span></h2>
       <p class="lead">Ритм, звук и картинка — собраны так, чтобы досматривали до конца.</p>
       <div class="grid">
-        <div class="card">
+        <div class="card" data-video="img/video-1.mp4" data-caption="Reel / TikTok">
           <img src="img/video-1.jpg" alt="Ролик 1" />
           <div class="overlay">
             <h3>Reel / TikTok</h3>
             <p>Динамика, быстрые склейки, субтитры</p>
           </div>
         </div>
-        <div class="card">
+        <div class="card" data-video="img/video-2.mp4" data-caption="Промо-ролик">
           <img src="img/video-2.jpg" alt="Промо 1" />
           <div class="overlay">
             <h3>Промо-ролик</h3>
@@ -386,6 +440,13 @@
     </section>
   </main>
 
+  <!-- Лайтбокс: общий для картинок и видео -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightbox-close" aria-label="Закрыть">✕</button>
+    <div id="lightbox-content"></div>
+    <div class="lightbox-caption" id="lightbox-caption"></div>
+  </div>
+
   <script>
     const buttons = document.querySelectorAll('.tab-btn');
     const sections = document.querySelectorAll('section');
@@ -397,12 +458,68 @@
         btn.classList.add('active');
         document.getElementById(btn.getAttribute('data-tab')).classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        // перезапуск каскадной анимации карточек при каждом открытии вкладки
         document.querySelectorAll('#' + btn.getAttribute('data-tab') + ' .card').forEach(c => {
           c.style.animation = 'none';
           void c.offsetWidth;
           c.style.animation = '';
         });
+      });
+    });
+
+    // ===== Лайтбокс =====
+    const lightbox = document.getElementById('lightbox');
+    const lightboxContent = document.getElementById('lightbox-content');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const lightboxClose = document.getElementById('lightbox-close');
+    let currentVideo = null;
+
+    function openLightbox(html, caption) {
+      lightboxContent.innerHTML = html;
+      lightboxCaption.textContent = caption || '';
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden'; // блокируем прокрутку страницы
+    }
+
+    function closeLightbox() {
+      if (currentVideo) {
+        currentVideo.pause(); // ставим ролик на паузу при закрытии
+        currentVideo = null;
+      }
+      lightboxContent.innerHTML = '';
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    lightboxClose.addEventListener('click', closeLightbox);
+
+    // Закрытие по клику на тёмный фон (но не по самой картинке/видео)
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    // Закрытие по Esc
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+    });
+
+    // Клик по карточкам: картинка или видео
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('click', () => {
+        if (card.dataset.video) {
+          // Видео: плеер с контролами (пауза, перемотка, громкость, фуллскрин)
+          openLightbox(
+            '<video src="' + card.dataset.video + '" controls autoplay playsinline></video>',
+            card.dataset.caption
+          );
+          currentVideo = lightboxContent.querySelector('video');
+          currentVideo.addEventListener('ended', () => currentVideo = null);
+        } else if (card.dataset.img) {
+          // Картинка: на весь экран, клик по ней — закрыть
+          openLightbox(
+            '<img src="' + card.dataset.img + '" alt="Просмотр работы" />',
+            card.querySelector('.overlay h3') ? card.querySelector('.overlay h3').textContent : ''
+          );
+        }
       });
     });
 
@@ -418,17 +535,13 @@
             div.innerHTML = '<strong>Email</strong><br/>✅ Адрес скопирован!';
             setTimeout(() => { div.innerHTML = emailOriginal; }, 2500);
           })
-          .catch(() => {}); // если копирование недоступно — сработает обычный mailto
+          .catch(() => {});
       }
     });
 
     // Рабочий переход на вкладку контактов
     function goToContacts() {
       document.querySelector('.tab-btn[data-tab="contacts"]').click();
-    }
-
-    function openProject(id) {
-      alert('Здесь откроется детальный просмотр проекта.');
     }
   </script>
 </body>
