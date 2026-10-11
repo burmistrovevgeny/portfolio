@@ -81,14 +81,12 @@
       margin-bottom: 0.6rem;
       letter-spacing: -0.02em;
     }
-    /* Подзаголовок-лид под h2 */
     .lead {
       color: var(--muted);
       font-size: 1.05rem;
       margin-bottom: 2rem;
       max-width: 640px;
     }
-    /* Градиентный «живой» текст для акцентов */
     .gradient-text {
       background: linear-gradient(90deg, #ff5e71, #7c5cff, #ff5e71);
       background-size: 200% auto;
@@ -114,7 +112,6 @@
       cursor: pointer;
       transition: transform 0.4s cubic-bezier(0.25,1,0.5,1),
                   box-shadow 0.4s ease;
-      /* каскадное появление */
       opacity: 0;
       animation: cardIn 0.6s ease forwards;
     }
@@ -185,11 +182,17 @@
       gap: 0.8rem;
       transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
       border: 1px solid transparent;
+      /* Ссылки не должны быть синими и подчёркнутыми */
+      color: var(--text);
+      text-decoration: none;
     }
+    .contact-item:visited { color: var(--text); }
     .contact-item:hover {
       transform: translateY(-4px);
       border-color: rgba(255,94,113,0.4);
       box-shadow: 0 12px 24px rgba(0,0,0,0.35);
+      color: var(--text);
+      text-decoration: none;
     }
     button.cta {
       margin-top: 1.5rem;
@@ -201,7 +204,6 @@
       font-weight: 600;
       cursor: pointer;
       transition: background 0.3s ease, transform 0.2s ease;
-      /* Пульсация свечением */
       animation: ctaPulse 2.6s ease-in-out infinite;
     }
     @keyframes ctaPulse {
@@ -342,12 +344,12 @@
       <button class="cta" onclick="goToContacts()">Связаться</button>
     </section>
 
-        <!-- Контакты -->
+    <!-- Контакты -->
     <section id="contacts">
       <h2>Обсудим <span class="gradient-text">твой проект?</span></h2>
       <p class="lead">Нажми на любой контакт — откроется почта, чат или профиль.</p>
       <div class="contact-grid">
-        <a class="contact-item" href="mailto:evgenyburmistrov@mail.ru">
+        <a class="contact-item" href="mailto:evgenyburmistrov@mail.ru" id="email-item">
           <span>✉️</span>
           <div>
             <strong>Email</strong><br/>
@@ -377,6 +379,7 @@
         </a>
       </div>
     </section>
+  </main>
 
   <script>
     const buttons = document.querySelectorAll('.tab-btn');
@@ -392,10 +395,26 @@
         // перезапуск каскадной анимации карточек при каждом открытии вкладки
         document.querySelectorAll('#' + btn.getAttribute('data-tab') + ' .card').forEach(c => {
           c.style.animation = 'none';
-          void c.offsetWidth; // сброс анимации
+          void c.offsetWidth;
           c.style.animation = '';
         });
       });
+    });
+
+    // Клик по Email: копирует адрес и показывает подсказку (fallback для mailto)
+    const emailItem = document.getElementById('email-item');
+    const emailOriginal = emailItem.querySelector('div').innerHTML;
+
+    emailItem.addEventListener('click', (e) => {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText('evgenyburmistrov@mail.ru')
+          .then(() => {
+            const div = emailItem.querySelector('div');
+            div.innerHTML = '<strong>Email</strong><br/>✅ Адрес скопирован!';
+            setTimeout(() => { div.innerHTML = emailOriginal; }, 2500);
+          })
+          .catch(() => {}); // если копирование недоступно — сработает обычный mailto
+      }
     });
 
     // Рабочий переход на вкладку контактов
